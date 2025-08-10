@@ -1,4 +1,5 @@
 // index.js
+const winston = require('winston');
 
 const express = require('express');
 const jwt = require('jsonwebtoken');
@@ -11,15 +12,33 @@ app.use(express.json());
 // Sample user data (Replace with your database or actual authentication logic)
 const users = [];
 
+const logger = winston.createLogger({
+  level: 'info', // Log level
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ), // Log format
+  transports: [
+    // Console transport
+    new winston.transports.Console(),
+    // File transport
+    new winston.transports.File({ filename: 'logfile.log' }),
+  ],
+});
+
 // Endpoint for user registration
 app.post('/register', (req, res) => {
   const { username, password } = req.body;
 
   // Check if the username already exists
   const existingUser = users.find((u) => u.username === username);
-  if (existingUser) {
-    return res.status(400).json({ message: 'Username already exists' });
-  }
+  logger.info("Attempting to register user: " + username);
+if (existingUser) {
+  logger.error("Username already exists");
+  logger.warn("Please choose a different username.");
+  return res.status(400).json({ message: 'Username already exists' });
+}
+
 
   // Add new user to the database
   const newUser = {
@@ -30,6 +49,7 @@ app.post('/register', (req, res) => {
   users.push(newUser);
 
   res.status(201).json({ message: 'User registered successfully' });
+  logger.info("User registered successfully: " + username);
 });
 
 // Endpoint for user login
@@ -42,9 +62,12 @@ app.post('/login', (req, res) => {
   if (user) {
     // User authenticated, generate token
     const token = jwt.sign({ id: user.id, username: user.username }, secretKey);
+    logger.info("User logged in successfully: " + username);
     res.json({ token });
   } else {
-    res.status(401).json({ message: 'Invalid credentials' });
+    logger.error("Invalid login attempt for user: " + username);
+    logger.warn("Please check your credentials and try again. "+ username);
+    res.status(401).json({ message: 'Invalid username or password'});
   }
 });
 
@@ -68,7 +91,9 @@ function verifyToken(req, res, next) {
       }
     });
   } else {
-    res.sendStatus(401);
+    logger.error("No token provided");
+    logger.warn("Authorization token is required.");
+    res.sendStatus(403);
   }
 }
 

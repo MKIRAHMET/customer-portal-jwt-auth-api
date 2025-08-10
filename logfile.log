@@ -1,0 +1,8 @@
+{"level":"info","message":"Attempting to register user: moha","timestamp":"2025-08-10T19:36:33.818Z"}
+{"level":"info","message":"User registered successfully: moha","timestamp":"2025-08-10T19:36:33.823Z"}
+{"level":"info","message":"Attempting to register user: moha","timestamp":"2025-08-10T19:36:37.829Z"}
+{"level":"error","message":"Username already exists","timestamp":"2025-08-10T19:36:37.829Z"}
+{"level":"warn","message":"Please choose a different username.","timestamp":"2025-08-10T19:36:37.829Z"}
+{"level":"error","message":"Invalid login attempt for user: mha","timestamp":"2025-08-10T19:36:45.879Z"}
+{"level":"warn","message":"Please check your credentials and try again. mha","timestamp":"2025-08-10T19:36:45.879Z"}
+{"level":"info","message":"User logged in successfully: moha","timestamp":"2025-08-10T19:36:49.680Z"}
